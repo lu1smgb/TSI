@@ -27,6 +27,12 @@ public class Test {
 
 		String myCamelController = "tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL.myAgent_camel";
 
+		String dijkstraController = "tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL.AgenteDijkstra";
+		String AStarController = "tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL.AgenteAStar";
+		String RTAStarController = "tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL.AgenteRTAStar";
+		String LRTAStarController = "tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL.AgenteLRTAStar";
+		String competicionController = "tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL.AgenteCompeticion";
+
 		//Load available games
 		String spGamesCollection =  "examples/all_games_sp.csv";
 		String[][] games = Utils.readGames(spGamesCollection);
@@ -36,8 +42,8 @@ public class Test {
 		int seed = new Random().nextInt();
 
 		// Game and level to play
-		int gameIdx = 15;
-		int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
+		int gameIdx = 122;
+		int levelIdx = 2; // level names from 0 to 4 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
 		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
@@ -51,7 +57,7 @@ public class Test {
 		// ArcadeMachine.playOneGame(game, level1, recordActionsFile, seed);
 
 		// 2. This plays a game in a level by the controller.
-		ArcadeMachine.runOneGame(game, level1, visuals, myCamelController, recordActionsFile, seed, 0);
+		ArcadeMachine.runOneGame(game, level1, visuals, dijkstraController, recordActionsFile, seed, 0);
 
 
 		// 3. This replays a game from an action file previously recorded
