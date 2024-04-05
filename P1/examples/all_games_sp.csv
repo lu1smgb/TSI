@@ -120,3 +120,6 @@
 119,examples/contphysics/pong.txt
 120,examples/contphysics/ptsp.txt
 121,examples/contphysics/racing.txt
+122,examples/gridphysics/boulderdashmaze.txt
+123,examples/gridphysics/boulderdashmazeExtended.txt
+124,examples/gridphysics/boulderdashmazeComp.txt
