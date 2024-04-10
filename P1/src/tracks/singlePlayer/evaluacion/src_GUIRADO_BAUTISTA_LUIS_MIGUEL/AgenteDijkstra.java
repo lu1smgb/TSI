@@ -158,13 +158,13 @@ public class AgenteDijkstra extends AbstractPlayer {
 
         // Creamos la tabla de costes
         // Para entender mejor el proposito de la tabla de costes, podemos considerar la tabla como la funcion de coste g(n)
-        CostTable costTable = new CostTable(stateObs);
+        CostTableDijkstra costTable = new CostTableDijkstra(stateObs);
         CostTableKey initialNode = new CostTableKey(getAvatarGridPosition(stateObs));
-        CostTableValues initialNodeValues = new CostTableValues(0, null);
+        CostTableValuesDijkstra initialNodeValues = new CostTableValuesDijkstra(0, null);
         costTable.put(initialNode, initialNodeValues);
 
         // Creamos el comparador para las colas de nodos
-        NodeComparator comparator = new NodeComparator(costTable);
+        NodeComparatorDijkstra comparator = new NodeComparatorDijkstra(costTable);
 
         // Creamos la cola de nodos abiertos
         // Al empezar tendra el nodo inicial
@@ -221,8 +221,8 @@ public class AgenteDijkstra extends AbstractPlayer {
                     double distancia = manhattanDistance(nodoActual.pos, nodoSucesor.pos);
 
                     // Obtenemos los costes actuales y el estimado
-                    CostTableValues nodoActualValues = costTable.get(nodoActual);
-                    CostTableValues nodoSucesorValues = costTable.get(nodoSucesor);
+                    CostTableValuesDijkstra nodoActualValues = costTable.get(nodoActual);
+                    CostTableValuesDijkstra nodoSucesorValues = costTable.get(nodoSucesor);
                     Double costoActual = nodoActualValues.cost;
                     Double costoSucesor = nodoSucesorValues.cost;
                     double nuevoCosto = costoActual + distancia;
@@ -230,14 +230,8 @@ public class AgenteDijkstra extends AbstractPlayer {
                     // Si el nodo no ha sido explorado y el coste estimado es inferior al del sucesor
                     if (!nodosCerrados.contains(nodoSucesor) && costoSucesor > nuevoCosto) {
 
-                        // Insertamos el nodo en abiertos
-                        ACTIONS accion = sucesor.getKey();
-
-                        // Le asignamos la accion al nodo actual
-                        costTable.get(nodoActual).action = accion;
-
                         // Actualizamos el costo y asignamos padre al nodo sucesor
-                        CostTableValues valoresSucesor = new CostTableValues(nuevoCosto, nodoActual);
+                        CostTableValuesDijkstra valoresSucesor = new CostTableValuesDijkstra(nuevoCosto, nodoActual);
                         costTable.put(nodoSucesor, valoresSucesor);
 
                         // Insertamos el nodo sucesor en abiertos

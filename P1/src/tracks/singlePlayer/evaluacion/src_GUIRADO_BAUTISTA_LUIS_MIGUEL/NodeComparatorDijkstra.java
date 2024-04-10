@@ -2,11 +2,11 @@ package tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL;
 
 import java.util.Comparator;
 
-public class NodeComparator implements Comparator<CostTableKey> {
+public class NodeComparatorDijkstra implements Comparator<CostTableKey> {
 
-    CostTable costs;
+    CostTableDijkstra costs;
 
-    NodeComparator(CostTable costs) {
+    NodeComparatorDijkstra(CostTableDijkstra costs) {
         this.costs = costs;
     }
 

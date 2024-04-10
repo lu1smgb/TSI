@@ -5,9 +5,9 @@ import java.util.HashMap;
 import core.game.StateObservation;
 import tools.Vector2d;
 
-public class CostTable extends HashMap<CostTableKey, CostTableValues> {
+public class CostTableDijkstra extends HashMap<CostTableKey, CostTableValuesDijkstra> {
     
-    public CostTable(StateObservation stateObs) {
+    public CostTableDijkstra(StateObservation stateObs) {
         super();
 
         int width = stateObs.getObservationGrid().length;
@@ -19,7 +19,7 @@ public class CostTable extends HashMap<CostTableKey, CostTableValues> {
 
                 Vector2d pos = new Vector2d(j, i);
                 CostTableKey key = new CostTableKey(pos);
-                CostTableValues values = new CostTableValues();
+                CostTableValuesDijkstra values = new CostTableValuesDijkstra();
                 this.put(key, values);
 
             }
