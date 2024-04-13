@@ -57,7 +57,16 @@ public class Test {
 		// ArcadeMachine.playOneGame(game, level1, recordActionsFile, seed);
 
 		// 2. This plays a game in a level by the controller.
-		ArcadeMachine.runOneGame(game, level1, visuals, AStarController, recordActionsFile, seed, 0);
+		try {
+			// ArcadeMachine.runOneGame(game, level1, visuals, dijkstraController, recordActionsFile, seed, 0);
+			// Thread.sleep(2000);
+			ArcadeMachine.runOneGame(game, level1, visuals, AStarController, recordActionsFile, seed, 0);
+			Thread.sleep(2000);
+			System.exit(0);
+		}
+		catch (Exception e) {
+			System.exit(-1);
+		}
 
 
 		// 3. This replays a game from an action file previously recorded
