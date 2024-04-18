@@ -8,7 +8,7 @@ import ontology.Types.ACTIONS;
 import tools.ElapsedCpuTimer;
 import tools.Vector2d;
 
-public abstract class AgenteOfflineAbstracto extends AbstractPlayer {
+public abstract class AgenteOffline extends AbstractPlayer {
 
     final boolean DEBUG = false;
 
@@ -32,7 +32,7 @@ public abstract class AgenteOfflineAbstracto extends AbstractPlayer {
         System.out.println(metricas);
     }
     
-    public AgenteOfflineAbstracto(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
+    public AgenteOffline(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
 
         fescala = null;
         ruta = new ArrayDeque<>();

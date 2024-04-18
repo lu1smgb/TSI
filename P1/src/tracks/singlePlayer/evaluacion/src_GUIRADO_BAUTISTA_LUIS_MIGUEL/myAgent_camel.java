@@ -2,7 +2,6 @@ package tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Vector;
 
 import core.game.Observation;
 import core.game.StateObservation;

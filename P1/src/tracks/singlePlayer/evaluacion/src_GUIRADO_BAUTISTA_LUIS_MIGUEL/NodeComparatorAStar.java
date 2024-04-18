@@ -5,21 +5,19 @@ import java.util.HashMap;
 
 public class NodeComparatorAStar implements Comparator<CostTableKey> {
 
-    HashMap<CostTableKey, CostTableValuesAStar>costs;
-    boolean compareH;
-    boolean compareG;
+    HashMap<CostTableKey, CostTableValuesAStar> costs;
 
-    NodeComparatorAStar(HashMap<CostTableKey, CostTableValuesAStar> costs, boolean compareG) {
+    NodeComparatorAStar(HashMap<CostTableKey, CostTableValuesAStar> costs) {
         this.costs = costs;
-        this.compareG = compareG;
-        this.compareH = !compareG;
     }
 
     @Override
     public int compare(CostTableKey n1, CostTableKey n2) {
 
-        Double c1 = compareG ? costs.get(n1).cost_g : costs.get(n1).cost_h;
-        Double c2 = compareG ? costs.get(n2).cost_g : costs.get(n2).cost_h;
+        CostTableValuesAStar v1 = costs.get(n1);
+        CostTableValuesAStar v2 = costs.get(n2);
+        double c1 = v1.cost_g + v1.cost_h;
+        double c2 = v2.cost_g + v2.cost_h;
         return (int) Math.round(c1 - c2);
 
     }

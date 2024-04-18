@@ -11,7 +11,7 @@ import ontology.Types.ACTIONS;
 import tools.ElapsedCpuTimer;
 import tools.Vector2d;
 
-public class AgenteDijkstra extends AgenteOfflineAbstracto {
+public class AgenteDijkstra extends AgenteOffline {
 
     public ArrayDeque<ACTIONS> generateRoute(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
         
@@ -41,15 +41,13 @@ public class AgenteDijkstra extends AgenteOfflineAbstracto {
         // Localizamos el objetivo
         Vector2d posicionObjetivo = Utilidades.getNearestObjective(stateObs);
 
-        while (true) {
+        while (!nodosAbiertos.isEmpty()) {
 
             nodoActual = nodosAbiertos.poll();
 
             // Si no hay mas nodos sin explorar
             if (nodoActual == null) {
-                if (DEBUG) {
-                    System.out.println("El algoritmo ha fallado :(");
-                }
+                if (DEBUG) System.out.println("El algoritmo ha fallado :(");
                 System.exit(-1); // Se muere
             }
 
@@ -59,13 +57,13 @@ public class AgenteDijkstra extends AgenteOfflineAbstracto {
                 this.objetivoAlcanzado = true;
                 break; // El algoritmo acaba con exito
             }
+            metricas.nodes++;
 
             // Ponemos el nodo actual en cerrados
             nodosCerrados.add(nodoActual);
 
             // Generamos las posiciones adyacentes al nodo actual
             HashMap<Types.ACTIONS, Vector2d> adyacentes = Utilidades.generateAdyacentPositions(stateObs, nodoActual.pos);
-            metricas.nodes++;
 
             // Para cada nodo adyacente, para cada sucesor
             for (Map.Entry<Types.ACTIONS, Vector2d> sucesor : adyacentes.entrySet()) {

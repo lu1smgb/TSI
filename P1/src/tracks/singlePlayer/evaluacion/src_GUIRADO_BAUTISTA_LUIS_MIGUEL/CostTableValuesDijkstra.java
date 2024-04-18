@@ -1,7 +1,5 @@
 package tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL;
 
-import ontology.Types.ACTIONS;
-
 public class CostTableValuesDijkstra {
     
     public double cost;

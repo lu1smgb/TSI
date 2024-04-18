@@ -5,6 +5,8 @@ import java.util.Random;
 import core.logging.Logger;
 import tools.Utils;
 import tracks.ArcadeMachine;
+import tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL.BoulderDashMaze;
+import tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL.MapType;
 
 /**
  * Created with IntelliJ IDEA. User: Diego Date: 04/10/13 Time: 16:29 This is a
@@ -38,31 +40,50 @@ public class Test {
 		String[][] games = Utils.readGames(spGamesCollection);
 
 		//Game settings
-		boolean visuals = true;
+		// !!!!!!!! Configurar el programa aqui !!!!!!!!!!!!!!!
+		boolean visuals = false;
 		int seed = new Random().nextInt();
+		BoulderDashMaze gameType = BoulderDashMaze.Simple;
+		MapType mapType = MapType.Large;
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		// Game and level to play
-		int gameIdx = 122;
-		int levelIdx = 2; // level names from 0 to 4 (game_lvlN.txt).
+		int gameIdx = gameType.getId();
+		int levelIdx = mapType.getId();
+
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
 		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
 
-		String recordActionsFile = null;// "actions_" + games[gameIdx] + "_lvl"
-						// + levelIdx + "_" + seed + ".txt";
-						// where to record the actions
-						// executed. null if not to save.
+		String recordActionsFile = "actions_" + levelIdx + ".txt"; // "actions_" + games[gameIdx] + "_lvl"
+																	// + levelIdx + "_" + seed + ".txt";
+																	// where to record the actions
+																	// executed. null if not to save.
 
 		// 1. This starts a game, in a level, played by a human.
 		// ArcadeMachine.playOneGame(game, level1, recordActionsFile, seed);
 
 		// 2. This plays a game in a level by the controller.
 		try {
-			// ArcadeMachine.runOneGame(game, level1, visuals, dijkstraController, recordActionsFile, seed, 0);
-			// Thread.sleep(2000);
-			ArcadeMachine.runOneGame(game, level1, visuals, AStarController, recordActionsFile, seed, 0);
+
+			// Dijkstra
+			ArcadeMachine.runOneGame(game, level1, visuals, dijkstraController, null, seed, 0);
 			Thread.sleep(2000);
+
+			// A*
+			ArcadeMachine.runOneGame(game, level1, visuals, AStarController, null, seed, 0);
+			Thread.sleep(2000);
+
+			// RTA*
+			// ArcadeMachine.runOneGame(game, level1, visuals, RTAStarController, recordActionsFile, seed, 0);
+			// Thread.sleep(2000);
+
+			// LRTA*
+			// ArcadeMachine.runOneGame(game, level1, visuals, LRTAStarController, recordActionsFile, seed, 0);
+			// Thread.sleep(2000);
+
 			System.exit(0);
+
 		}
 		catch (Exception e) {
 			System.exit(-1);

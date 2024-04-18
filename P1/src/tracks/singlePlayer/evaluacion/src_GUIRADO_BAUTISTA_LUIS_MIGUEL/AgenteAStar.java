@@ -11,7 +11,7 @@ import ontology.Types.ACTIONS;
 import tools.ElapsedCpuTimer;
 import tools.Vector2d;
 
-public class AgenteAStar extends AgenteOfflineAbstracto {
+public class AgenteAStar extends AgenteOffline {
 
     public ArrayDeque<ACTIONS> generateRoute(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
 
@@ -23,26 +23,16 @@ public class AgenteAStar extends AgenteOfflineAbstracto {
         // Creamos la tabla de costes
         // Para entender mejor el proposito de la tabla de costes, podemos considerar la
         // tabla como la funcion de coste g(n)
-        HashMap<CostTableKey, CostTableValuesAStar> costTable = new HashMap<>();
-        int width = stateObs.getObservationGrid().length;
-        int height = stateObs.getObservationGrid()[0].length;
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                Vector2d pos = new Vector2d(j, i);
-                CostTableKey key = new CostTableKey(pos);
-                double distanciaInicial = Utilidades.manhattanDistance(pos, posicionObjetivo);
-                CostTableValuesAStar values = new CostTableValuesAStar(distanciaInicial, Double.POSITIVE_INFINITY, null);
-                costTable.put(key, values);
-            }
-        }
+        HashMap<CostTableKey, CostTableValuesAStar> costTable = new CostTableAStar(stateObs, posicionObjetivo);
 
+        // Establecemos los valores de la tabla de costes del nodo inicial
         CostTableKey initialNode = new CostTableKey(Utilidades.getAvatarGridPosition(stateObs));
         CostTableValuesAStar initialNodeValues = costTable.get(initialNode);
         initialNodeValues.cost_g = 0;
         costTable.put(initialNode, initialNodeValues);
 
         // Creamos el comparador para las colas de nodos
-        NodeComparatorAStar comparator = new NodeComparatorAStar(costTable, false);
+        NodeComparatorAStar comparator = new NodeComparatorAStar(costTable);
 
         // Creamos la cola de nodos abiertos
         // Al empezar tendra el nodo inicial
@@ -56,33 +46,30 @@ public class AgenteAStar extends AgenteOfflineAbstracto {
         // iteraciones
         CostTableKey nodoActual = null;
 
-        while (true) {
+        while (!nodosAbiertos.isEmpty()) {
 
             // Sacamos el nodo con menor coste H de abiertos
             nodoActual = nodosAbiertos.poll();
 
             // Si no hay mas nodos que explorar y no se ha encontrado un camino al objetivo
             if (nodoActual == null) {
-                if (DEBUG) {
-                    System.out.println("El algoritmo ha fallado :(");
-                }
+                if (DEBUG) System.out.println("El algoritmo ha fallado :(");
                 System.exit(-1); // Se muere
             }
 
             // Si se ha alcanzado el objetivo
             if (Utilidades.mismaPosicion(posicionObjetivo, nodoActual.pos)) {
-                if (DEBUG)
-                    System.out.println("!!! OBJETIVO ALCANZADO !!!");
+                if (DEBUG) System.out.println("!!! OBJETIVO ALCANZADO !!!");
                 this.objetivoAlcanzado = true;
                 break; // El algoritmo acaba con exito
             }
+            metricas.nodes++;
 
             // Ponemos el nodo actual en cerrados
             nodosCerrados.add(nodoActual);
 
             // Generamos las posiciones adyacentes al nodo actual
             HashMap<Types.ACTIONS, Vector2d> adyacentes = Utilidades.generateAdyacentPositions(stateObs, nodoActual.pos);
-            metricas.nodes++;
 
             // Para cada nodo adyacente, para cada sucesor
             for (Map.Entry<Types.ACTIONS, Vector2d> sucesor : adyacentes.entrySet()) {
@@ -117,6 +104,7 @@ public class AgenteAStar extends AgenteOfflineAbstracto {
                     }
                     else if (!nodosCerrados.contains(nodoSucesor) && !nodosAbiertos.contains(nodoSucesor)) {
 
+                        // Nodo no visitado, aniadir
                         nodoSucesorValues.parent = nodoActual;
                         costTable.put(nodoSucesor, nodoSucesorValues);
                         nodosAbiertos.add(nodoSucesor);
