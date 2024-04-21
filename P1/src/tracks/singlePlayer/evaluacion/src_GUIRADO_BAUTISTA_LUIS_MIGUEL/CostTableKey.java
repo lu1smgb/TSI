@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import tools.Vector2d;
 
+// Clase "clave de tabla" usada para obtener y actualizar los datos de las tablas de costes
 public class CostTableKey {
     
     public Vector2d pos;

@@ -13,9 +13,11 @@ import tools.Vector2d;
 
 public class AgenteDijkstra extends AgenteOffline {
 
-    public ArrayDeque<ACTIONS> generateRoute(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
+    @Override
+    public ArrayDeque<ACTIONS> generateRoute(StateObservation stateObs, Vector2d posicionObjetivo) {
         
         // PRINICIPIO DEL ALGORITMO
+        if (DEBUG) System.out.println("### AGENTE DIJKSTRA ###");
 
         // Creamos la tabla de costes
         // Para entender mejor el proposito de la tabla de costes, podemos considerar la tabla como la funcion de coste g(n)
@@ -38,11 +40,10 @@ public class AgenteDijkstra extends AgenteOffline {
         // Nodo sobre el que generaremos los siguientes nodos abiertos a lo largo de las iteraciones
         CostTableKey nodoActual = null;
 
-        // Localizamos el objetivo
-        Vector2d posicionObjetivo = Utilidades.getNearestObjective(stateObs);
-
+        // Mientras haya nodos sin explorar
         while (!nodosAbiertos.isEmpty()) {
 
+            // Obtenemos el de menor coste
             nodoActual = nodosAbiertos.poll();
 
             // Si no hay mas nodos sin explorar
@@ -57,7 +58,7 @@ public class AgenteDijkstra extends AgenteOffline {
                 this.objetivoAlcanzado = true;
                 break; // El algoritmo acaba con exito
             }
-            metricas.nodes++;
+            metricas.nodes++; // Comprobacion de objetivo, aumentamos nodos expandidos
 
             // Ponemos el nodo actual en cerrados
             nodosCerrados.add(nodoActual);
@@ -71,7 +72,7 @@ public class AgenteDijkstra extends AgenteOffline {
                 // Obtenemos la posicion
                 Vector2d sucesorPos = sucesor.getValue();
 
-                // Si es transitable esa posicion, seguimos, si no, pasamos a la siguiente posicion
+                // Si es transitable esa posicion
                 if (Utilidades.isTransitable(stateObs, sucesorPos)) {
 
                     // Generamos el nodo
@@ -120,13 +121,15 @@ public class AgenteDijkstra extends AgenteOffline {
             Vector2d diferencia = new Vector2d(diferencia_x, diferencia_y);
             ACTIONS accion = Utilidades.orientationToAction(diferencia);
 
+            // Agregamos la accion a la ruta, el actual pasa a ser el padre y
+            // obtenemos su respectivo padre
             route.addFirst(accion);
             nodoActual = nodoPadre;
             nodoPadre = costTable.get(nodoActual).parent;
 
         }
 
-        // Despues la modificamos teniendo en cuenta la orientacion
+        // Modificamos la ruta teniendo en cuenta la orientacion
         // Desde el principio hasta el final
         ArrayDeque<ACTIONS> new_route = new ArrayDeque<ACTIONS>();
         ACTIONS orientacion = Utilidades.orientationToAction(stateObs.getAvatarOrientation());
@@ -135,20 +138,25 @@ public class AgenteDijkstra extends AgenteOffline {
 
             ACTIONS accion = route.poll();
 
+            // Si ya no hay mas acciones en la ruta anterior
             if (accion == null) {
                 break;
             }
 
+            // Si el agente no esta mirando a donde tiene que moverse
             if (orientacion != accion) {
+                // Le indicamos primero que gire en esa direccion 
                 new_route.add(accion);
                 orientacion = accion;
             }
 
+            // Agregamos la accion a la ruta nueva
             new_route.add(accion);
 
         }
         route = new_route;
         
+        // FIN DEL ALGORITMO
         return route;
 
     }

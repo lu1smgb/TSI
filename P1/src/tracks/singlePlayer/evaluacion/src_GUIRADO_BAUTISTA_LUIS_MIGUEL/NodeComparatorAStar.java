@@ -3,6 +3,7 @@ package tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL;
 import java.util.Comparator;
 import java.util.HashMap;
 
+// Comparador utilizado por el agente A* para determinar que nodos extraer antes de las colas
 public class NodeComparatorAStar implements Comparator<CostTableKey> {
 
     HashMap<CostTableKey, CostTableValuesAStar> costs;

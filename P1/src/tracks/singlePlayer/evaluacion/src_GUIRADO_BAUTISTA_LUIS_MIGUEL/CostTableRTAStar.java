@@ -5,10 +5,10 @@ import java.util.HashMap;
 import core.game.StateObservation;
 import tools.Vector2d;
 
-// Tabla de costes para el agente A*
-public class CostTableAStar extends HashMap<CostTableKey, CostTableValuesAStar> {
-    
-    public CostTableAStar(StateObservation stateObs, Vector2d posicionObjetivo) {
+// Tabla de costes para el agente RTA*
+public class CostTableRTAStar extends HashMap<CostTableKey, CostTableValuesAStar> {
+
+    public CostTableRTAStar(StateObservation stateObs) {
         super();
         
         int width = stateObs.getObservationGrid().length;
@@ -20,12 +20,11 @@ public class CostTableAStar extends HashMap<CostTableKey, CostTableValuesAStar> 
 
                 Vector2d pos = new Vector2d(j, i);
                 CostTableKey key = new CostTableKey(pos);
-                double distanciaInicial = Utilidades.manhattanDistance(pos, posicionObjetivo);
                 // Valores iniciales de cada nodo:
-                // Coste G = +infinito (desconocido)
-                // Coste H = Distancia Manhattan
-                // Padre = ninguno
-                CostTableValuesAStar values = new CostTableValuesAStar(Double.POSITIVE_INFINITY, distanciaInicial, null);
+                // Coste G = +infinito (no se utiliza)
+                // Coste H = +infinito (desconocido)
+                // Padre = null (no se utiliza)
+                CostTableValuesAStar values = new CostTableValuesAStar(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, null);
                 this.put(key, values);
 
             }

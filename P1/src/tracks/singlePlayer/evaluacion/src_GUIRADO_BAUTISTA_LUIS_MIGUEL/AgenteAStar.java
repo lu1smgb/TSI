@@ -13,17 +13,16 @@ import tools.Vector2d;
 
 public class AgenteAStar extends AgenteOffline {
 
-    public ArrayDeque<ACTIONS> generateRoute(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
+    @Override
+    public ArrayDeque<ACTIONS> generateRoute(StateObservation stateObs, Vector2d posicionObjetivo) {
 
         // PRINICIPIO DEL ALGORITMO
-
-        // Localizamos el objetivo
-        Vector2d posicionObjetivo = Utilidades.getNearestObjective(stateObs);
+        if (DEBUG) System.out.println("### AGENTE A* ###");
 
         // Creamos la tabla de costes
         // Para entender mejor el proposito de la tabla de costes, podemos considerar la
         // tabla como la funcion de coste g(n)
-        HashMap<CostTableKey, CostTableValuesAStar> costTable = new CostTableAStar(stateObs, posicionObjetivo);
+        CostTableAStar costTable = new CostTableAStar(stateObs, posicionObjetivo);
 
         // Establecemos los valores de la tabla de costes del nodo inicial
         CostTableKey initialNode = new CostTableKey(Utilidades.getAvatarGridPosition(stateObs));
@@ -46,6 +45,7 @@ public class AgenteAStar extends AgenteOffline {
         // iteraciones
         CostTableKey nodoActual = null;
 
+        // Mientras haya nodos en la cola de abiertos
         while (!nodosAbiertos.isEmpty()) {
 
             // Sacamos el nodo con menor coste H de abiertos
@@ -75,6 +75,7 @@ public class AgenteAStar extends AgenteOffline {
             for (Map.Entry<Types.ACTIONS, Vector2d> sucesor : adyacentes.entrySet()) {
 
                 // Obtenemos la posicion
+                ACTIONS accionSucesor = sucesor.getKey();
                 Vector2d sucesorPos = sucesor.getValue();
 
                 // Si es transitable esa posicion, seguimos, si no, pasamos a la siguiente
@@ -84,15 +85,19 @@ public class AgenteAStar extends AgenteOffline {
                     // Generamos el nodo
                     CostTableKey nodoSucesor = new CostTableKey(sucesorPos);
 
+                    // Obtenemos los costes G
+                    ACTIONS orientation = Utilidades.orientationToAction(stateObs.getAvatarOrientation());
                     CostTableValuesAStar nodoActualValues = costTable.get(nodoActual);
                     CostTableValuesAStar nodoSucesorValues = costTable.get(nodoSucesor);
-
                     Double actualCost_g = nodoActualValues.cost_g;
                     Double sucesorCost_g = nodoSucesorValues.cost_g;
-                    Double estimadoCost_g = actualCost_g + 1;
+                    Double actionCost = orientation == accionSucesor ? 1d : 2d;
+                    Double estimadoCost_g = actualCost_g + actionCost;
 
+                    // Si el nodo es explorado pero el coste estimado G es mejor
                     if (nodosCerrados.contains(nodoSucesor) && estimadoCost_g < sucesorCost_g) {
 
+                        // Eliminamos el nodo de cerrados
                         nodosCerrados.remove(nodoSucesor);
 
                         // Actualizamos el coste G
@@ -100,16 +105,19 @@ public class AgenteAStar extends AgenteOffline {
                         nodoSucesorValues.parent = nodoActual;
                         costTable.put(nodoSucesor, nodoSucesorValues);
 
+                        // Lo pasamos a abiertos
                         nodosAbiertos.add(nodoSucesor);
                     }
+                    // Si el nodo no ha sido visitado y no ha sido vecino de ningun otro nodo
                     else if (!nodosCerrados.contains(nodoSucesor) && !nodosAbiertos.contains(nodoSucesor)) {
 
-                        // Nodo no visitado, aniadir
+                        // Lo aniadimos a abiertos
                         nodoSucesorValues.parent = nodoActual;
                         costTable.put(nodoSucesor, nodoSucesorValues);
                         nodosAbiertos.add(nodoSucesor);
 
                     }
+                    // Si el nodo no ha sido visitado y el coste G es mejor
                     else if (nodosAbiertos.contains(nodoSucesor) && estimadoCost_g < sucesorCost_g) { 
 
                         // Actualizamos el coste G
@@ -142,13 +150,15 @@ public class AgenteAStar extends AgenteOffline {
             Vector2d diferencia = new Vector2d(diferencia_x, diferencia_y);
             ACTIONS accion = Utilidades.orientationToAction(diferencia);
 
+            // Agregamos la accion a la ruta, el actual pasa a ser el padre y
+            // obtenemos su respectivo padre
             route.addFirst(accion);
             nodoActual = nodoPadre;
             nodoPadre = costTable.get(nodoActual).parent;
 
         }
 
-        // Despues la modificamos teniendo en cuenta la orientacion
+        // Modificamos la ruta teniendo en cuenta la orientacion
         // Desde el principio hasta el final
         ArrayDeque<ACTIONS> new_route = new ArrayDeque<ACTIONS>();
         ACTIONS orientacion = Utilidades.orientationToAction(stateObs.getAvatarOrientation());
@@ -157,22 +167,25 @@ public class AgenteAStar extends AgenteOffline {
 
             ACTIONS accion = route.poll();
 
+            // Si ya no hay mas acciones en la ruta anterior
             if (accion == null) {
                 break;
             }
 
+            // Si el agente no esta mirando a donde tiene que moverse
             if (orientacion != accion) {
+                // Le indicamos primero que gire en esa direccion
                 new_route.add(accion);
                 orientacion = accion;
             }
 
+            // Agregamos la accion a la ruta nueva
             new_route.add(accion);
 
         }
         route = new_route;
 
         // FIN DEL ALGORITMO
-
         return route;
 
     }

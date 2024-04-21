@@ -1,5 +1,6 @@
 package tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL;
 
+// Clase usada para medir las estadisticas requeridas por la memoria de la practica
 public class MetricasEvaluacion {
 
     protected long tinicio;

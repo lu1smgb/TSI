@@ -1,5 +1,6 @@
 package tracks.singlePlayer;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import core.logging.Logger;
@@ -16,17 +17,6 @@ public class Test {
 
     public static void main(String[] args) {
 
-		// Available tracks:
-		String sampleRandomController = "tracks.singlePlayer.simple.sampleRandom.Agent";
-		String doNothingController = "tracks.singlePlayer.simple.doNothing.Agent";
-		String sampleOneStepController = "tracks.singlePlayer.simple.sampleonesteplookahead.Agent";
-		String sampleFlatMCTSController = "tracks.singlePlayer.simple.greedyTreeSearch.Agent";
-
-		String sampleMCTSController = "tracks.singlePlayer.advanced.sampleMCTS.Agent";
-        String sampleRSController = "tracks.singlePlayer.advanced.sampleRS.Agent";
-        String sampleRHEAController = "tracks.singlePlayer.advanced.sampleRHEA.Agent";
-		String sampleOLETSController = "tracks.singlePlayer.advanced.olets.Agent";
-
 		String myCamelController = "tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL.myAgent_camel";
 
 		String dijkstraController = "tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL.AgenteDijkstra";
@@ -40,88 +30,55 @@ public class Test {
 		String[][] games = Utils.readGames(spGamesCollection);
 
 		//Game settings
-		// !!!!!!!! Configurar el programa aqui !!!!!!!!!!!!!!!
-		boolean visuals = false;
+		boolean visuals = true;
 		int seed = new Random().nextInt();
-		BoulderDashMaze gameType = BoulderDashMaze.Simple;
-		MapType mapType = MapType.Large;
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-		// Game and level to play
-		int gameIdx = gameType.getId();
-		int levelIdx = mapType.getId();
+		// Fragmento de codigo para ejecutar todos los controladores en los mapas principales
+		// ArrayList<String> agents = new ArrayList<>();
+		// ArrayList<MapType> maps = new ArrayList<>();
 
+		// // BoulderDashMaze.Simple o BoulderDashMaze.Extended
+		// BoulderDashMaze gameType = BoulderDashMaze.Extended;
+
+		// // Mapas a emplear
+		// maps.add(MapType.Small);
+		// maps.add(MapType.Medium);
+		// maps.add(MapType.Large);
+
+		// // Controladores a evaluar
+		// if (gameType == BoulderDashMaze.Simple) {
+		// 	agents.add(dijkstraController);
+		// 	agents.add(AStarController);
+		// }
+		// agents.add(RTAStarController);
+		// agents.add(LRTAStarController);
+
+		// for (String agent : agents) {
+		// 	for (MapType map : maps) {
+		// 		// System.out.println(agent + "\n" + map.toString());
+		// 		int gameIdx = gameType.getId();
+		// 		int levelIdx = map.getId();
+		// 		String gameName = games[gameIdx][1];
+		// 		String game = games[gameIdx][0];
+		// 		String level = game.replace(gameName, gameName + "_lvl" + levelIdx);
+		// 		ArcadeMachine.runOneGame(game, level, visuals, agent, null, seed, 0);
+		// 	}
+		// }
+
+		// Ejecutar un juego individual
+		int gameIdx = 122;
+		int levelIdx = 1;
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
-		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
-
-		String recordActionsFile = "actions_" + levelIdx + ".txt"; // "actions_" + games[gameIdx] + "_lvl"
-																	// + levelIdx + "_" + seed + ".txt";
-																	// where to record the actions
-																	// executed. null if not to save.
-
-		// 1. This starts a game, in a level, played by a human.
-		// ArcadeMachine.playOneGame(game, level1, recordActionsFile, seed);
-
-		// 2. This plays a game in a level by the controller.
+		String level = game.replace(gameName, gameName + "_lvl" + levelIdx);
 		try {
-
-			// Dijkstra
-			ArcadeMachine.runOneGame(game, level1, visuals, dijkstraController, null, seed, 0);
+			ArcadeMachine.runOneGame(game, level, visuals, RTAStarController, null, seed, 0);
 			Thread.sleep(2000);
-
-			// A*
-			ArcadeMachine.runOneGame(game, level1, visuals, AStarController, null, seed, 0);
-			Thread.sleep(2000);
-
-			// RTA*
-			// ArcadeMachine.runOneGame(game, level1, visuals, RTAStarController, recordActionsFile, seed, 0);
-			// Thread.sleep(2000);
-
-			// LRTA*
-			// ArcadeMachine.runOneGame(game, level1, visuals, LRTAStarController, recordActionsFile, seed, 0);
-			// Thread.sleep(2000);
-
-			System.exit(0);
-
-		}
-		catch (Exception e) {
-			System.exit(-1);
+		} catch (Exception e) {
+			
 		}
 
-
-		// 3. This replays a game from an action file previously recorded
-	//	 String readActionsFile = recordActionsFile;
-	//	 ArcadeMachine.replayGame(game, level1, visuals, readActionsFile);
-
-		// 4. This plays a single game, in N levels, M times :
-//		String level2 = new String(game).replace(gameName, gameName + "_lvl" + 1);
-//		int M = 10;
-//		for(int i=0; i<games.length; i++){
-//			game = games[i][0];
-//			gameName = games[i][1];
-//			level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
-//			ArcadeMachine.runGames(game, new String[]{level1}, M, sampleMCTSController, null);
-//		}
-
-		//5. This plays N games, in the first L levels, M times each. Actions to file optional (set saveActions to true).
-//		int N = games.length, L = 2, M = 1;
-//		boolean saveActions = false;
-//		String[] levels = new String[L];
-//		String[] actionFiles = new String[L*M];
-//		for(int i = 0; i < N; ++i)
-//		{
-//			int actionIdx = 0;
-//			game = games[i][0];
-//			gameName = games[i][1];
-//			for(int j = 0; j < L; ++j){
-//				levels[j] = game.replace(gameName, gameName + "_lvl" + j);
-//				if(saveActions) for(int k = 0; k < M; ++k)
-//				actionFiles[actionIdx++] = "actions_game_" + i + "_level_" + j + "_" + k + ".txt";
-//			}
-//			ArcadeMachine.runGames(game, levels, M, sampleRHEAController, saveActions? actionFiles:null);
-//		}
-
+		System.exit(0);
 
     }
 }

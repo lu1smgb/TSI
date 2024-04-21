@@ -1,54 +1,24 @@
 package tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL;
 
-import java.util.ArrayDeque;
-
 import core.game.StateObservation;
-import core.player.AbstractPlayer;
+import java.util.ArrayDeque;
 import ontology.Types.ACTIONS;
 import tools.ElapsedCpuTimer;
 import tools.Vector2d;
 
-public abstract class AgenteOffline extends AbstractPlayer {
-
-    final boolean DEBUG = false;
-
-    Vector2d fescala;
+public abstract class AgenteOffline extends PlantillaAgente {
 
     ArrayDeque<ACTIONS> ruta;
-    boolean objetivoAlcanzado;
-
-    MetricasEvaluacion metricas;
-
-    public Vector2d getScaleFactor(StateObservation stateObs) {
-
-        if (this.fescala == null) {
-            this.fescala = Utilidades.calculateScaleFactor(stateObs);
-        }
-        return this.fescala;
-
-    }
-
-    void mostrarMetricas() {
-        System.out.println(metricas);
-    }
     
     public AgenteOffline(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
 
-        fescala = null;
-        ruta = new ArrayDeque<>();
-        objetivoAlcanzado = false;
-        metricas = new MetricasEvaluacion();
+        super(stateObs, elapsedTimer);
 
-        getScaleFactor(stateObs);
-        metricas.iniciarCronometro();
-        ruta = generateRoute(stateObs, elapsedTimer);
-        metricas.pararCronometro();
-        metricas.setSteps(ruta.size());
-        mostrarMetricas();
+        ruta = new ArrayDeque<>();
 
     }
 
-    ArrayDeque<ACTIONS> generateRoute(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
+    ArrayDeque<ACTIONS> generateRoute(StateObservation stateObs, Vector2d posicionObjetivo) {
         return new ArrayDeque<>();
     }
 
@@ -57,8 +27,27 @@ public abstract class AgenteOffline extends AbstractPlayer {
 
         ACTIONS siguienteAccion = ACTIONS.ACTION_NIL;
 
+        // Si no se ha generado la ruta a seguir
+        if (ruta.isEmpty()) {
+
+            // Localizamos el objetivo
+            Vector2d posicionObjetivo = Utilidades.getNearestObjective(stateObs);
+
+            // Generamos la ruta y medimos estadisticas
+            metricas.iniciarCronometro();
+            ruta = generateRoute(stateObs, posicionObjetivo);
+            metricas.pararCronometro();
+            metricas.setSteps(ruta.size());
+
+            // Mostramos estadisticas
+            mostrarMetricas();
+
+        }
+
+        // Sacamos la siguiente accion de la ruta
         siguienteAccion = this.ruta.poll();
 
+        // Realiza dicha accion
         return siguienteAccion;
 
     }

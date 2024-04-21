@@ -2,6 +2,7 @@ package tracks.singlePlayer.evaluacion.src_GUIRADO_BAUTISTA_LUIS_MIGUEL;
 
 import java.util.Comparator;
 
+// Comparador utilizado por el agente Dijkstra para determinar que nodos extraer antes de las colas
 public class NodeComparatorDijkstra implements Comparator<CostTableKey> {
 
     CostTableDijkstra costs;
