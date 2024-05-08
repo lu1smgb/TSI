@@ -9,7 +9,8 @@ public class AgenteLRTAStar extends AgenteRTAStar {
 
     public AgenteLRTAStar(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
         super(stateObs, elapsedTimer);
-        isLRTA = true;
+        Utilidades.__printMap(stateObs);
+        this.isLRTA = true;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class Test {
 		boolean visuals = true;
 		int seed = new Random().nextInt();
 
-		// Fragmento de codigo para ejecutar todos los controladores en los mapas principales
+		// // Fragmento de codigo para ejecutar todos los controladores en los mapas principales
 		// ArrayList<String> agents = new ArrayList<>();
 		// ArrayList<MapType> maps = new ArrayList<>();
 
@@ -45,7 +45,7 @@ public class Test {
 		// maps.add(MapType.Medium);
 		// maps.add(MapType.Large);
 
-		// // Controladores a evaluar
+		// // // Controladores a evaluar
 		// if (gameType == BoulderDashMaze.Simple) {
 		// 	agents.add(dijkstraController);
 		// 	agents.add(AStarController);
@@ -55,7 +55,7 @@ public class Test {
 
 		// for (String agent : agents) {
 		// 	for (MapType map : maps) {
-		// 		// System.out.println(agent + "\n" + map.toString());
+		// 		System.out.println(agent + "\n" + map.toString());
 		// 		int gameIdx = gameType.getId();
 		// 		int levelIdx = map.getId();
 		// 		String gameName = games[gameIdx][1];
@@ -66,7 +66,7 @@ public class Test {
 		// }
 
 		// Ejecutar un juego individual
-		int gameIdx = 122;
+		int gameIdx = 123;
 		int levelIdx = 1;
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];

@@ -10,12 +10,14 @@ import tools.Vector2d;
 
 public class AgenteRTAStar extends AgenteOnline {
 
-    boolean isLRTA = false;
-    boolean firstActCall = true;
+    boolean isLRTA;
+    boolean firstActCall;
 
     public AgenteRTAStar(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
 
         super(stateObs, elapsedTimer);
+        isLRTA = false;
+        firstActCall = true;
 
     }
 
@@ -83,7 +85,8 @@ public class AgenteRTAStar extends AgenteOnline {
                 }
 
                 double heuristicCost = valoresSucesor.cost_h; // h(y)
-                double movementCost = orientacion == accionSucesor ? 1d : 2d; // Coste(x,y)
+                //double movementCost = orientacion == accionSucesor ? 1d : 2d; // Coste(x,y)
+                double movementCost = 1d;
                 double calculatedCost = movementCost + heuristicCost; // Coste(x,y) + h(y)
 
                 // Si el coste calculado es menor que el primer minimo
@@ -116,7 +119,7 @@ public class AgenteRTAStar extends AgenteOnline {
         }
 
         // Aplicamos la regla de aprendizaje
-        nodoActualValues.cost_h = Math.max(nodoActualValues.cost_h, isLRTA ? bestCost : secondBestCost);
+        nodoActualValues.cost_h = Math.max(nodoActualValues.cost_h, (isLRTA ? bestCost : secondBestCost));
         costTable.put(nodoActual, nodoActualValues);
 
         // Si se ha alcanzado el objetivo, paramos de medir el tiempo y mostramos los resultados
