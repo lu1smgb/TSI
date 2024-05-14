@@ -1,0 +1,18 @@
+{
+    "openFiles": [
+        "Ejercicio1.mzn",
+        "Ejercicio2.mzn",
+        "Ejercicio3.mzn",
+        "Ejercicio4.mzn"
+    ],
+    "openTab": 2,
+    "projectFiles": [
+        "Ejercicio1.mzn",
+        "Ejercicio2.mzn",
+        "Ejercicio3.mzn",
+        "Ejercicio4.mzn",
+        "Ejercicio4.solver.mpc"
+    ],
+    "selectedSolverConfigFile": "Ejercicio4.solver.mpc",
+    "version": 106
+}
